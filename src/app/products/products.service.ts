@@ -43,7 +43,7 @@ export class ProductsService extends ApiService {
     console.warn(
       'Endpoint "bff" is disabled. To enable change your environment.ts config'
     );
-    return this.http.get<Product>(`${this.productsApi}/get-product-by-id`, { params: { id } });
+    return this.http.get<Product>(`${this.productsApi}/products/${id}`);
     // }
     //
     // const url = this.getUrl('bff', `products/${id}`);
@@ -57,7 +57,7 @@ export class ProductsService extends ApiService {
     console.warn(
       'Endpoint "bff" is disabled. To enable change your environment.ts config'
     );
-    return this.http.get<Product[]>(`${this.productsApi}/get-products-list`);
+    return this.http.get<Product[]>(`${this.productsApi}/products`);
     // }
     //
     // const url = this.getUrl('bff', 'products');
