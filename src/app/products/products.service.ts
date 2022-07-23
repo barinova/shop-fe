@@ -6,11 +6,14 @@ import { map } from 'rxjs/operators';
 import { Product } from './product.interface';
 
 import { ApiService } from '../core/api.service';
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService extends ApiService {
+  private productsApi: string = environment.apiEndpoints.product;
+
   createNewProduct(product: Product): Observable<Product> {
     if (!this.endpointEnabled('bff')) {
       console.warn(
@@ -35,36 +38,30 @@ export class ProductsService extends ApiService {
     return this.http.put<Product>(url, changedProduct);
   }
 
-  getProductById(id: string): Observable<Product | null> {
-    if (!this.endpointEnabled('bff')) {
-      console.warn(
-        'Endpoint "bff" is disabled. To enable change your environment.ts config'
-      );
-      return this.http
-        .get<Product[]>('/assets/products.json')
-        .pipe(
-          map(
-            (products) => products.find((product) => product.id === id) || null
-          )
-        );
-    }
-
-    const url = this.getUrl('bff', `products/${id}`);
-    return this.http
-      .get<{ product: Product }>(url)
-      .pipe(map((resp) => resp.product));
+  getProductById(id: string): Observable<Product> {
+    // if (!this.endpointEnabled('bff')) {
+    console.warn(
+      'Endpoint "bff" is disabled. To enable change your environment.ts config'
+    );
+    return this.http.get<Product>(`${this.productsApi}/products/${id}`);
+    // }
+    //
+    // const url = this.getUrl('bff', `products/${id}`);
+    // return this.http
+    //   .get<{ product: Product }>(url)
+    //   .pipe(map((resp) => resp.product));
   }
 
   getProducts(): Observable<Product[]> {
-    if (!this.endpointEnabled('bff')) {
-      console.warn(
-        'Endpoint "bff" is disabled. To enable change your environment.ts config'
-      );
-      return this.http.get<Product[]>('/assets/products.json');
-    }
-
-    const url = this.getUrl('bff', 'products');
-    return this.http.get<Product[]>(url);
+    // if (!this.endpointEnabled('bff')) {
+    console.warn(
+      'Endpoint "bff" is disabled. To enable change your environment.ts config'
+    );
+    return this.http.get<Product[]>(`${this.productsApi}/products`);
+    // }
+    //
+    // const url = this.getUrl('bff', 'products');
+    // return this.http.get<Product[]>(url);
   }
 
   getProductsForCheckout(ids: string[]): Observable<Product[]> {
