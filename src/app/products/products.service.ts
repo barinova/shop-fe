@@ -15,15 +15,7 @@ export class ProductsService extends ApiService {
   private productsApi: string = environment.apiEndpoints.product;
 
   createNewProduct(product: Product): Observable<Product> {
-    if (!this.endpointEnabled('bff')) {
-      console.warn(
-        'Endpoint "bff" is disabled. To enable change your environment.ts config'
-      );
-      return EMPTY;
-    }
-
-    const url = this.getUrl('bff', 'products');
-    return this.http.post<Product>(url, product);
+    return this.http.post<Product>(`${this.productsApi}/products`, product);
   }
 
   editProduct(id: string, changedProduct: Product): Observable<Product> {
@@ -39,29 +31,15 @@ export class ProductsService extends ApiService {
   }
 
   getProductById(id: string): Observable<Product> {
-    // if (!this.endpointEnabled('bff')) {
-    console.warn(
-      'Endpoint "bff" is disabled. To enable change your environment.ts config'
-    );
     return this.http.get<Product>(`${this.productsApi}/products/${id}`);
-    // }
-    //
-    // const url = this.getUrl('bff', `products/${id}`);
-    // return this.http
-    //   .get<{ product: Product }>(url)
-    //   .pipe(map((resp) => resp.product));
   }
 
   getProducts(): Observable<Product[]> {
-    // if (!this.endpointEnabled('bff')) {
-    console.warn(
-      'Endpoint "bff" is disabled. To enable change your environment.ts config'
-    );
     return this.http.get<Product[]>(`${this.productsApi}/products`);
-    // }
-    //
-    // const url = this.getUrl('bff', 'products');
-    // return this.http.get<Product[]>(url);
+  }
+
+ addProduct(product: Product): Observable<Product[]> {
+    return this.http.post<Product[]>(`${this.productsApi}/products`, { product });
   }
 
   getProductsForCheckout(ids: string[]): Observable<Product[]> {
