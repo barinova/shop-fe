@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { Product } from '../../products/product.interface';
 import { ProductsService } from '../../products/products.service';
 import { ManageProductsService } from './manage-products.service';
+import {HttpErrorResponse} from '@angular/common/http';
+import {NotificationService} from 'src/app/core/notification.service';
 
 @Component({
   selector: 'app-manage-products',
@@ -19,7 +21,8 @@ export class ManageProductsComponent implements OnInit {
   constructor(
     private readonly productsService: ProductsService,
     private readonly manageProductsService: ManageProductsService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -31,11 +34,15 @@ export class ManageProductsComponent implements OnInit {
       return;
     }
 
+    try {
     this.manageProductsService
       .uploadProductsCSV(this.selectedFile)
       .subscribe(() => {
         this.selectedFile = null;
         this.cdr.markForCheck();
-      });
+      })
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
